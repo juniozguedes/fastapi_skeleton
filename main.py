@@ -32,11 +32,15 @@ def get_model(model_name=ModelChoices):
         return {"model_name": model_name, "message": "LeCNN all the images"}
 
     return {"model_name": model_name, "message": "Have some residuals"}
-    
+
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Optional[str] = None):
     return {"item_id": item_id, "q": q}
 
+@app.post("/items/")
+async def create_item(item: Item):
+    return item
+
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
+    return {"item_name": item.name, "item_id": item_id, **item.dict()}

@@ -1,46 +1,52 @@
-from typing import Optional
+from typing import Optional, Set
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from pydantic import BaseModel
-
-from enum import Enum
 
 app = FastAPI()
 
-#Choices
-class ModelChoices(str, Enum):
-    alexnet = "alexnet"
-    resnet = "resnet"
-    lenet = "lenet"
 
-#DTO
+#DTOs
+
+class Image(BaseModel):
+    url: str
+    name: str
+
 class Item(BaseModel):
     name: str
     price: float
     is_offer: Optional[bool] = None
+    tags: Set[str] = set() #Unique items list
+    image: Optional[Image] = None
+    
+class User(BaseModel):
+    username: str
+    full_name: Optional[str] = None
 
-@app.get("/")
-async def read_root():
-    return {"Hello": "World"}
-
-@app.get("/model/{model_name}")
-def get_model(model_name=ModelChoices):
-    if model_name == ModelName.alexnet:
-        return {"model_name": model_name, "message": "Deep Learning FTW!"}
-
-    if model_name.value == "lenet":
-        return {"model_name": model_name, "message": "LeCNN all the images"}
-
-    return {"model_name": model_name, "message": "Have some residuals"}
 
 @app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+def read_item(item_id: int, q: Optional[str] = Query(None, max_length=4)):
+    results = {"item_id": item_id}
+    if q:
+        results.update({"q": q})
+    return results
 
 @app.post("/items/")
 async def create_item(item: Item):
     return item
 
 @app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id, **item.dict()}
+async def update_item(
+    item_id: int,
+    q: Optional[str] = None,
+    item: Optional[Item] = None,
+    user: Optional[User] = None
+):  
+    results = {"Jedi_master":item.name, "item_id":item_id}
+    if q:
+        results.update({"q":q})
+    if item:
+        results.update(**item.dict())
+    if user:
+        results.update(**user.dict())
+    return results

@@ -1,10 +1,11 @@
+from fastapi.security import OAuth2PasswordBearer
 from typing import Optional, Set
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Depends
 from pydantic import BaseModel
 
 app = FastAPI()
-
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 #DTOs
 
@@ -18,11 +19,14 @@ class Item(BaseModel):
     is_offer: Optional[bool] = None
     tags: Set[str] = set() #Unique items list
     image: Optional[Image] = None
-    
+
 class User(BaseModel):
     username: str
     full_name: Optional[str] = None
 
+@app.get("/items/")
+async def read_items(token: str = Depends(oauth2_scheme)):
+    return {"token": token}
 
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Optional[str] = Query(None, max_length=4)):

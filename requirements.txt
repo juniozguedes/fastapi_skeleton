@@ -1,4 +1,9 @@
-fastapi==0.65.0
-pydantic==1.8.1
-starlette==0.14.2
-typing-extensions==3.10.0.0
+appdirs==1.4.4
+certifi==2020.12.5
+distlib==0.3.1
+filelock==3.0.12
+pipenv==2020.11.15
+python-multipart==0.0.5
+six==1.15.0
+virtualenv==20.4.3
+virtualenv-clone==0.5.4

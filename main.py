@@ -1,14 +1,18 @@
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from passlib.context import CryptContext
-
-from typing import Optional, Set
-
-from fastapi import FastAPI, Query, Depends, HTTPException, status
-from pydantic import BaseModel
+from fastapi import FastAPI
 
 from routes import items, auth
+
+from tortoise.contrib.fastapi import register_tortoise
 
 app = FastAPI()
 
 app.include_router(auth.router)
 app.include_router(items.router)
+
+register_tortoise(
+    app,
+    db_url='sqlite://db.sqlite3',
+    modules={'models': [auth]},
+    generate_schemas=True,
+    add_exception_handlers=True
+)

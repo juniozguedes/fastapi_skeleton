@@ -1,0 +1,23 @@
+name: Python Fast_API Application
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Run docker container
+        run: |
+          export FAST_API_ENV=production
+          docker-compose -f docker-compose.yaml up -d --build
+      - name: Test with pytest
+        run: |
+          echo development, tests to be developed

@@ -1,13 +1,17 @@
 # Requirements:
 
-    python3, pip
+    python3, Docker
 
-# activate virtualenv and install dependencies
+# Build and run container
 
-    virtualenv venv
-    source venv/Scripts/activate (For windows)
-    pip install -r requirements
+    docker build .
+    docker images
+    docker run -p 8000:80 #image_id
 
-# start
+# Fast API provides swagger documentation, once container is up
+    http://localhost:8000/docs
 
-    python main.py
+# Userful docker commands
+
+kill all running containers with docker kill $(docker ps -q)
+delete all stopped containers with docker rm $(docker ps -a -q)

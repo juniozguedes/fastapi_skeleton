@@ -1,0 +1,9 @@
+services:
+  web:
+    build:
+      context: ./
+    container_name: fast_api
+    environment:
+      FAST_API_ENV: production
+    ports:
+      - 8000:80

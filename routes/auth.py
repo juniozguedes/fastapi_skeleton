@@ -1,3 +1,4 @@
+import os
 import jwt
 from fastapi import APIRouter
 from fastapi import Depends, HTTPException, status
@@ -32,6 +33,12 @@ async def authenticate_user(username: str, password: str):
     if not user.verify_password(password):
         return False
     return user
+
+@router.get('/')
+async def sysinfo():
+    return {
+        'Environment': os.environ['FAST_API_ENV']
+    }
 
 @router.post('/token')
 async def generate_token(form_data: OAuth2PasswordRequestForm = Depends()):
